@@ -71,9 +71,15 @@ simulation:
 ################
   parameters:
     nstep:
-      500000
+      5000
     nstdcd:
-      10000
+      50
+    nstout:
+      50
+    cons:
+      None
+    dt:
+      0.002
   free-energy-type:
     'binding-free-energy'
     #'solvation-free-energy'

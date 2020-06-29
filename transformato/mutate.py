@@ -13,6 +13,7 @@ from rdkit.Chem import AllChem, Draw, rdFMCS
 from rdkit.Chem.Draw import IPythonConsole, rdMolDraw2D
 from simtk import unit
 from transformato import state
+import networkx as nx 
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +96,7 @@ class ProposeMutationRoute(object):
         for m in [m1, m2]:
             logger.info('Mol in SMILES format: {}.'.format(Chem.MolToSmiles(m, True)))
 
-        # make copy of mols and write atom type in isotope propertie
+        # make copy of mols
         changed_mols = [Chem.Mol(x) for x in [m1, m2]]
 
         # find substructure match (ignore bond order but enforce element matching)
@@ -242,6 +243,27 @@ class ProposeMutationRoute(object):
 
         return transformations
 
+    @staticmethod
+    def _find_terminal_atom(cc_idx: list, mol):
+        """
+        Find atoms that connect the rest of the molecule to the common core.
+
+        Args:
+            cc_idx (list): common core index atoms
+            mol ([type]): rdkit mol object
+        """
+        terminal_atoms = []
+        
+        for atom in mol.GetAtoms():
+            idx = atom.GetIdx()
+            if idx not in cc_idx:
+                neighbors = [x.GetIdx() for x in atom.GetNeighbors()]
+                if any([n in cc_idx for n in neighbors]):
+                    terminal_atoms.append(idx)
+
+        logger.debug(f"Terminal atoms: {str(list(set(terminal_atoms)))}")
+        return list(set(terminal_atoms))
+
     def _mutate_to_common_core(self, name: str, cc_idx: list, nr_of_steps_for_el: int) -> list:
         """
         Helper function - do not call directly.
@@ -249,7 +271,8 @@ class ProposeMutationRoute(object):
         """
         mol = self.mols[name]
         hydrogens = []
-        mutations = []
+        charge_mutations = []
+        lj_mutations = []
         atoms_to_be_mutated = []
         for atom in mol.GetAtoms():
             idx = atom.GetIdx()
@@ -260,19 +283,66 @@ class ProposeMutationRoute(object):
                 logger.info('Will be decoupled: Idx:{} Element:{}'.format(idx, atom.GetSymbol()))
 
         if atoms_to_be_mutated:
+            ######################
             # scale all EL of all atoms to zero
-            mutations.append(ChargeToZeroMutation(atom_idx=atoms_to_be_mutated,
+            charge_mutations.append(ChargeToZeroMutation(atom_idx=atoms_to_be_mutated,
                                                 nr_of_steps=nr_of_steps_for_el, common_core=cc_idx))
 
+            
+            ######################
             # scale LJ
+            # here we save the last mutation steps
+            terminal_atoms = self._find_terminal_atom(cc_idx, mol)
+            lj_terminal_mutations = []
+
             # start with mutation of LJ of hydrogens
-            mutations.append(StericToZeroMutation(hydrogens))
+            lj_mutations.append(StericToZeroMutation(hydrogens))
+            already_mutated = [] 
             # continue with scaling of heavy atoms LJ
-            for idx in atoms_to_be_mutated:
-                if idx not in hydrogens:  # hydrogens are already mutated
-                    mutations.append(StericToZeroMutation([idx]))
+            l = []
+            for n in nx.dfs_edges(self.graphs[name]):
+                logger.debug(n)
+                l.append(n)
+            
+            for idx1, idx2 in l:
+                if idx1 in atoms_to_be_mutated and idx1 not in hydrogens and idx1 not in already_mutated:
+                    
+                    if idx1 in terminal_atoms:
+                        lj_terminal_mutations.append(StericToZeroMutation([idx1]))
+                    else:
+                        lj_mutations.append(StericToZeroMutation([idx1]))
+                    already_mutated.append(idx1)
+
+                if idx2 in atoms_to_be_mutated and idx2 not in hydrogens and idx2 not in already_mutated:
+                    if idx2 in terminal_atoms:
+                        lj_terminal_mutations.append(StericToZeroMutation([idx2]))
+                    else:
+                        lj_mutations.append(StericToZeroMutation([idx2]))
+                    already_mutated.append(idx2)
+            # test that all mutations are included
+            # TODO: test that all mutations are covered
+            
+            mutations = charge_mutations + lj_mutations + lj_terminal_mutations
+
+            for m in mutations:
+                if type(m) == ChargeMutation:
+                    logger.debug(f"charge mutation on: {str(m.atom_idx)}")
+                elif type(m) == StericMutation:
+                    logger.debug(f"steric mutation on: {str(m.atom_idx)}")
+                else:
+                    logger.debug(f"mutation on: {str(m.atom_idx)}")
+                    
+            nr_of_lj_mutations = len(lj_mutations) + len(lj_terminal_mutations)
+            if nr_of_lj_mutations != len(atoms_to_be_mutated) - len(hydrogens) + 1:
+                # test if we have a single mutation for every heavy atom and a mutation for all hydrogens
+                logger.critical(f"Nr of lj mutations: {nr_of_lj_mutations}")
+                logger.critical(f"Nr of atoms to be mutated (nr of atoms - nr of hydrogens): {len(atoms_to_be_mutated) - len(hydrogens)}")
+                logger.critical(f"Atoms to be mutated: {str(atoms_to_be_mutated)}")
+                logger.critical(mutations)
+                raise RuntimeError('There are atoms missing in the steric mutation step ')
         else:
             logger.info("No atoms will be decoupled.")
+            mutations = []
         return mutations
 
     def _find_cliques(self, atoms_idx: list, mol: Chem.Mol) -> list:
@@ -661,9 +731,6 @@ class ChargeToZeroMutation(ChargeMutation):
 
     def __str__(self):
         return "charges to zero mutation"
-
-    def __unicode__(self):
-        return u"charges to zero mutation"
 
     def mutate(self, psf: pm.charmm.CharmmPsfFile, tlc: str, current_step: int):
 

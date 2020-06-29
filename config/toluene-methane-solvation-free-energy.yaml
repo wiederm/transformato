@@ -4,9 +4,9 @@ system:
 ################
   structure1:
     name:
-      'ethane'
+      'toluene'
     tlc:
-      'LIG'
+      'UNL'
     vacuum:
       dirname:
         'vacuum'
@@ -36,9 +36,9 @@ system:
 
   structure2:
     name:
-      'ethanol'
+      'methane'
     tlc:
-      'UNL'
+      'LIG'
     vacuum:
       dirname:
         'vacuum'
@@ -71,16 +71,11 @@ simulation:
 ################
   parameters:
     nstep:
-      5000
+      250000
     nstdcd:
-      50
+      5000
     nstout:
-      50
-    cons:
-      None
-    dt:
-      0.001
-
+      5000
   free-energy-type:
     'solvation-free-energy'
 ################

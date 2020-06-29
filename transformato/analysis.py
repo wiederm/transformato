@@ -13,8 +13,10 @@ from simtk.openmm import System, XmlSerializer
 from simtk.openmm.app import Simulation
 from simtk.openmm.vec3 import Vec3
 from tqdm import tqdm
+import seaborn as sns
 
 logger = logging.getLogger(__name__)
+kB = unit.BOLTZMANN_CONSTANT_kB * unit.AVOGADRO_CONSTANT_NA 
 
 def return_reduced_potential(potential_energy: unit.Quantity, volume: unit.Quantity, temperature: unit.Quantity):
     """Retrieve the reduced potential for a given context.
@@ -163,20 +165,22 @@ class FreeEnergyCalculator(object):
 
             energies = []
             for ts in tqdm(range(snapshots.n_frames)):
-                if env != 'vacuum':
+                if env == 'vacuum':
+                    bxl = None
+                    volumn = None
+                else:
                     # extract the box size at the given ts
                     bxl = snapshots.unitcell_lengths[ts][0] * (unit.nanometer)
                     volumn = bxl ** 3
-                else:
-                    bxl = None
-                    volumn = None
                 # calculate the potential energy
                 e = _energy_at_ts(simulation, snapshots.openmm_positions(ts), bxl)
                 # obtain the reduced potential (for NpT)
-                red_e = return_reduced_potential(e, volumn, 300 * unit.kelvin)
+                red_e = return_reduced_potential(e, volumn, 303.15 * unit.kelvin)
                 energies.append(red_e)
             return np.array(energies)
 
+
+        ##### main
         u_kn = np.stack(
             [_evaluated_e_on_all_snapshots(snapshots, i, env) for i in range(1, self.nr_of_states+1)]
         )
@@ -289,18 +293,17 @@ class FreeEnergyCalculator(object):
     def plot_free_energy_overlap(self, env):
         plt.figure(figsize=[8, 8], dpi=300)
         if env == 'vacuum':
-            plt.imshow(self.vacuum_free_energy_difference_overlap, cmap='Blues')
+            ax = sns.heatmap(self.vacuum_free_energy_difference_overlap, cmap='Blues', linewidth=0.5)
         elif env == 'waterbox':
-            plt.imshow(self.waterbox_free_energy_difference_overlap, cmap='Blues')
+            ax = sns.heatmap(self.waterbox_free_energy_difference_overlap, cmap='Blues', linewidth=0.5)
         elif env == 'complex':
-            plt.imshow(self.complex_free_energy_difference_overlap, cmap='Blues')
+            ax = sns.heatmap(self.complex_free_energy_difference_overlap, cmap='Blues', linewidth=0.5)
         else:
             raise RuntimeError()
         plt.title(f"Overlap of lambda states for ligand in {env}", fontsize=15)
         plt.xlabel('lambda state (0 to 1)', fontsize=15)
         plt.ylabel('lambda state (0 to 1)', fontsize=15)
         plt.legend()
-        plt.colorbar()
         plt.show()
         plt.close()
 

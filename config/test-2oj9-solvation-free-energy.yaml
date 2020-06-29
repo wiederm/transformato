@@ -4,9 +4,9 @@ system:
 ################
   structure1:
     name:
-      'ethane'
+      '2OJ9-test1'
     tlc:
-      'LIG'
+      'BMI'
     vacuum:
       dirname:
         'vacuum'
@@ -36,9 +36,9 @@ system:
 
   structure2:
     name:
-      'ethanol'
+      '2OJ9-test2'
     tlc:
-      'UNL'
+      'UNK'
     vacuum:
       dirname:
         'vacuum'

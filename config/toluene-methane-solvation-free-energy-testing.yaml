@@ -4,9 +4,9 @@ system:
 ################
   structure1:
     name:
-      '2OJ9-test1'
+      'toluene'
     tlc:
-      'BMI'
+      'UNL'
     vacuum:
       dirname:
         'vacuum'
@@ -36,9 +36,9 @@ system:
 
   structure2:
     name:
-      '2OJ9-test2'
+      'methane'
     tlc:
-      'UNK'
+      'LIG'
     vacuum:
       dirname:
         'vacuum'
@@ -71,9 +71,13 @@ simulation:
 ################
   parameters:
     nstep:
-      500000
+      2000000
     nstdcd:
-      10000
+      500
+    nstout:
+      5000
+    dt:
+      0.001
   free-energy-type:
     'solvation-free-energy'
 ################
