@@ -4,8 +4,10 @@ Workflow to set up a relative free energy calculation of ligands with a common c
 """
 
 # Add imports here
-from .utils import load_config_yaml
+from .utils import load_config_yaml, get_bin_dir, get_toppar_dir
+from .transformato import canvas
 from .system import SystemStructure
+
 from .state import IntermediateStateFactory
 from .mutate import ProposeMutationRoute
 from .analysis import FreeEnergyCalculator
