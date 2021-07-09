@@ -18,12 +18,12 @@ from transformato import (
 def test_read_yaml():
     """Sample test, will check ability to read yaml files"""
     settingsMap = load_config_yaml(
-        config="transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml",
+        config="transformato/tests/config/test-toluene-methane-rsfe.yaml",
         input_dir=".",
         output_dir="data/",
     )
 
-    assert settingsMap["system"]["name"] == "toluene-methane-solvation-free-energy"
+    assert settingsMap["system"]["name"] == "toluene-methane-rsfe"
     assert settingsMap["system"]["structure1"]["tlc"] == "UNL"
 
 
@@ -56,7 +56,7 @@ def test_initialize_systems(caplog):
     caplog.set_level(logging.DEBUG)
 
     configuration = load_config_yaml(
-        config="transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml",
+        config="transformato/tests/config/test-toluene-methane-rsfe.yaml",
         input_dir="data/",
         output_dir=".",
     )
@@ -73,7 +73,7 @@ def test_initialize_systems(caplog):
     assert "waterbox" in s1.envs and "waterbox" in s2.envs
 
     configuration = load_config_yaml(
-        config="transformato/tests/config/test-2oj9-tautomer-pair-solvation-free-energy.yaml",
+        config="transformato/tests/config/test-2oj9-tautomer-pair-rsfe.yaml",
         input_dir="data/",
         output_dir=".",
     )
@@ -87,7 +87,7 @@ def test_initialize_systems(caplog):
     assert int(s2.offset["vacuum"]) == 0
 
     configuration = load_config_yaml(
-        config="transformato/tests/config/test-tautomer-min-example-solvation-free-energy.yaml",
+        config="transformato/tests/config/test-tautomer-min-example-rsfe.yaml",
         input_dir="data/",
         output_dir=".",
     )

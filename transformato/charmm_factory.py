@@ -128,8 +128,7 @@ read para card unit 10 append flex
             "intermediate-filename"
         ]
 
-        header = f"""
-*Version September 2020 
+        header = f"""*Version September 2020 
 *Run script for CHARMM jobs from transformato 
 *
 

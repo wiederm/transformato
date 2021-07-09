@@ -3,12 +3,11 @@ Unit and regression test for the transformato package.
 """
 
 import os
-from typing import Tuple
 
 import numpy as np
 import pytest
 import logging
-import subprocess
+from ..constants import initialize_NUM_PROC
 
 # read in specific topology with parameters
 from transformato import (
@@ -35,6 +34,7 @@ def postprocessing(
     f = FreeEnergyCalculator(configuration, name)
     if only_vacuum:
         f.envs = ["vacuum"]
+
     if different_path_for_dcd:
         # this is needed if the trajectories are stored at a different location than the
         # potential definitions
@@ -44,16 +44,17 @@ def postprocessing(
         f.base_path = path
     else:
         f.load_trajs(nr_of_max_snapshots=max_snapshots)
+
     f.calculate_dG_to_common_core(engine=engine)
     if only_vacuum:
         return -1, -1, f
-
-    ddG, dddG = f.end_state_free_energy_difference
-    print(f"Free energy difference: {ddG}")
-    print(f"Uncertanty: {dddG}")
-    if show_summary:
-        f.show_summary()
-    return ddG, dddG, f
+    else:
+        ddG, dddG = f.end_state_free_energy_difference
+        print(f"Free energy difference: {ddG}")
+        print(f"Uncertanty: {dddG}")
+        if show_summary:
+            f.show_summary()
+        return ddG, dddG, f
 
 
 ###########################################
@@ -67,12 +68,10 @@ def test_compare_energies_2OJ9_original_vacuum(caplog):
 
     env = "vacuum"
 
-    base = "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-original/"
+    base = "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-original/"
     output_files_t1, _ = _set_output_files_2oj9_tautomer_pair()
 
-    conf = (
-        "transformato/tests/config/test-2oj9-tautomer-pair-solvation-free-energy.yaml"
-    )
+    conf = "transformato/tests/config/test-2oj9-tautomer-pair-rsfe.yaml"
 
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
@@ -105,12 +104,10 @@ def test_compare_energies_2OJ9_original_waterbox(caplog):
 
     env = "waterbox"
 
-    base = "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-original/"
+    base = "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-original/"
     output_files_t1, _ = _set_output_files_2oj9_tautomer_pair()
 
-    conf = (
-        "transformato/tests/config/test-2oj9-tautomer-pair-solvation-free-energy.yaml"
-    )
+    conf = "transformato/tests/config/test-2oj9-tautomer-pair-rsfe.yaml"
 
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
@@ -142,12 +139,10 @@ def test_compare_energies_2OJ9_tautomer_vacuum(caplog):
     import mdtraj as md
 
     env = "vacuum"
-    base = "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-tautomer/"
+    base = "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-tautomer/"
     _, output_files_t2 = _set_output_files_2oj9_tautomer_pair()
 
-    conf = (
-        "transformato/tests/config/test-2oj9-tautomer-pair-solvation-free-energy.yaml"
-    )
+    conf = "transformato/tests/config/test-2oj9-tautomer-pair-rsfe.yaml"
 
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
@@ -179,12 +174,10 @@ def test_compare_energies_2OJ9_tautomer_waterbox(caplog):
     import mdtraj as md
 
     env = "waterbox"
-    base = "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-tautomer/"
+    base = "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-tautomer/"
     _, output_files_t2 = _set_output_files_2oj9_tautomer_pair()
 
-    conf = (
-        "transformato/tests/config/test-2oj9-tautomer-pair-solvation-free-energy.yaml"
-    )
+    conf = "transformato/tests/config/test-2oj9-tautomer-pair-rsfe.yaml"
 
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
@@ -215,11 +208,31 @@ def test_compare_energies_2OJ9_tautomer_waterbox(caplog):
 @pytest.mark.skipif(
     os.environ.get("TRAVIS", None) == "true", reason="Skip slow test on travis."
 )
-def test_2oj9_solvation_free_energy_with_different_engines_postprocessing():
+def test_2oj9_calculate_rsfe_with_openMM_mp(caplog):
+    caplog.set_level(logging.DEBUG)
 
-    conf = (
-        "transformato/tests/config/test-2oj9-tautomer-pair-solvation-free-energy.yaml"
+    initialize_NUM_PROC(4)
+    conf = "transformato/tests/config/test-2oj9-tautomer-pair-rsfe.yaml"
+    configuration = load_config_yaml(
+        config=conf, input_dir="data/", output_dir="data"
+    )  # NOTE: for preprocessing input_dir is the output dir
+
+    # 2OJ9-original to tautomer common core
+    ddG_openMM, dddG, f_openMM = postprocessing(
+        configuration, name="2OJ9-original", engine="openMM", max_snapshots=600
     )
+
+    assert np.isclose(ddG_openMM, 3.3739872639241213)
+
+
+@pytest.mark.system_2oj9
+@pytest.mark.slowtest
+@pytest.mark.skipif(
+    os.environ.get("TRAVIS", None) == "true", reason="Skip slow test on travis."
+)
+def test_2oj9_calculate_rsfe_with_different_engines():
+
+    conf = "transformato/tests/config/test-2oj9-tautomer-pair-rsfe.yaml"
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
     )  # NOTE: for preprocessing input_dir is the output dir
@@ -278,15 +291,15 @@ def test_2oj9_solvation_free_energy_with_different_engines_postprocessing():
 @pytest.mark.skipif(
     os.environ.get("TRAVIS", None) == "true", reason="Skip slow test on travis."
 )
-def test_2oj9_solvation_free_energy_with_different_switches_postprocessing(caplog):
+def test_2oj9_calculate_rsfe_with_different_switches(caplog):
     caplog.set_level(logging.WARNING)
-    from .test_mutation import setup_2OJ9_tautomer_pair
+    from .test_mutation import setup_2OJ9_tautomer_pair_rsfe
     from .test_run_production import run_simulation
     from ..analysis import FreeEnergyCalculator
 
     # vfswitch
-    conf_path = "transformato/tests/config/test-2oj9-tautomer-pair-solvation-free-energy_vfswitch.yaml"
-    (output_files_t1, output_files_t2), _, _ = setup_2OJ9_tautomer_pair(
+    conf_path = "transformato/tests/config/test-2oj9-tautomer-pair-rsfe_vfswitch.yaml"
+    (output_files_t1, output_files_t2), _, _ = setup_2OJ9_tautomer_pair_rsfe(
         conf_path=conf_path
     )
     run_simulation(output_files_t1)
@@ -301,14 +314,14 @@ def test_2oj9_solvation_free_energy_with_different_switches_postprocessing(caplo
         name="2OJ9-original",
         engine="CHARMM",
         max_snapshots=600,
-        different_path_for_dcd="data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-original",
+        different_path_for_dcd="data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-original",
     )
     ddG_openMM, dddG, f_openMM_vfswitch = postprocessing(
         configuration,
         name="2OJ9-original",
         engine="openMM",
         max_snapshots=600,
-        different_path_for_dcd="data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-original",
+        different_path_for_dcd="data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-original",
     )
 
     assert np.isclose(
@@ -324,8 +337,8 @@ def test_2oj9_solvation_free_energy_with_different_switches_postprocessing(caplo
     )
 
     # switch
-    conf_path = "transformato/tests/config/test-2oj9-tautomer-pair-solvation-free-energy_vswitch.yaml"
-    (output_files_t1, output_files_t2), _, _ = setup_2OJ9_tautomer_pair(
+    conf_path = "transformato/tests/config/test-2oj9-tautomer-pair-rsfe_vswitch.yaml"
+    (output_files_t1, output_files_t2), _, _ = setup_2OJ9_tautomer_pair_rsfe(
         conf_path=conf_path
     )
     run_simulation(output_files_t1)
@@ -340,14 +353,14 @@ def test_2oj9_solvation_free_energy_with_different_switches_postprocessing(caplo
         name="2OJ9-original",
         engine="CHARMM",
         max_snapshots=600,
-        different_path_for_dcd="data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-original",
+        different_path_for_dcd="data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-original",
     )
     ddG_charmm, dddG, f_openMM_switch = postprocessing(
         configuration,
         name="2OJ9-original",
         engine="openMM",
         max_snapshots=600,
-        different_path_for_dcd="data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-original",
+        different_path_for_dcd="data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-original",
     )
 
     assert np.isclose(
@@ -379,6 +392,33 @@ def test_2oj9_solvation_free_energy_with_different_switches_postprocessing(caplo
     )
 
 
+@pytest.mark.system_2oj9
+@pytest.mark.slowtest
+@pytest.mark.skipif(
+    os.environ.get("TRAVIS", None) == "true", reason="Skip slow test on travis."
+)
+def test_2oj9_calculate_rbfe_with_openMM():
+
+    conf = "transformato/tests/config/test-2oj9-tautomer-pair-rbfe.yaml"
+    configuration = load_config_yaml(
+        config=conf, input_dir="data/", output_dir="data"
+    )  # NOTE: for preprocessing input_dir is the output dir
+
+    # 2OJ9-tautomer to tautomer common core
+    ddG_openMM, dddG, f_openMM = postprocessing(
+        configuration, name="2OJ9-tautomer", engine="openMM", max_snapshots=10
+    )
+
+    assert np.isclose(ddG_openMM, 1.0224154995479893)
+
+    # 2OJ9-original to tautomer common core
+    ddG_openMM, dddG, f_openMM = postprocessing(
+        configuration, name="2OJ9-original", engine="openMM", max_snapshots=10
+    )
+
+    assert np.isclose(ddG_openMM, -23.233893466807686)
+
+
 ###########################################
 # acetylacetone-tautomer system
 ###########################################
@@ -390,13 +430,13 @@ def test_compare_energies_acetylacetone_enol_vacuum(caplog):
 
     env = "vacuum"
 
-    base = "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-enol/"
+    base = "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-enol/"
     (
         output_files_enol,
         output_files_keto,
     ) = _set_output_files_acetylaceton_tautomer_pair()
 
-    conf = "transformato/tests/config/test-acetylacetone-tautomer-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-acetylacetone-tautomer-rsfe.yaml"
 
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
@@ -430,13 +470,13 @@ def test_compare_energies_acetylacetone_enol_waterbox(caplog):
 
     env = "waterbox"
 
-    base = "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-enol/"
+    base = "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-enol/"
     (
         output_files_enol,
         output_files_keto,
     ) = _set_output_files_acetylaceton_tautomer_pair()
 
-    conf = "transformato/tests/config/test-acetylacetone-tautomer-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-acetylacetone-tautomer-rsfe.yaml"
 
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
@@ -469,13 +509,13 @@ def test_compare_energies_acetylacetone_keto_vacuum(caplog):
     import mdtraj as md
 
     env = "vacuum"
-    base = "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-keto/"
+    base = "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-keto/"
     (
         output_files_enol,
         output_files_keto,
     ) = _set_output_files_acetylaceton_tautomer_pair()
 
-    conf = "transformato/tests/config/test-acetylacetone-tautomer-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-acetylacetone-tautomer-rsfe.yaml"
 
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
@@ -508,13 +548,13 @@ def test_compare_energies_acetylacetone_keto_waterbox(caplog):
     import mdtraj as md
 
     env = "waterbox"
-    base = "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-keto/"
+    base = "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-keto/"
     (
         output_files_enol,
         output_files_keto,
     ) = _set_output_files_acetylaceton_tautomer_pair()
 
-    conf = "transformato/tests/config/test-acetylacetone-tautomer-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-acetylacetone-tautomer-rsfe.yaml"
 
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
@@ -545,9 +585,9 @@ def test_compare_energies_acetylacetone_keto_waterbox(caplog):
 @pytest.mark.skipif(
     os.environ.get("TRAVIS", None) == "true", reason="Skip slow test on travis."
 )
-def test_acetylacetone_solvation_free_energy_with_different_engines_postprocessing():
+def test_acetylacetone_calculate_rsfe_with_different_engines():
 
-    conf = "transformato/tests/config/test-acetylacetone-tautomer-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-acetylacetone-tautomer-rsfe.yaml"
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
     )  # NOTE: for preprocessing input_dir is the output dir
@@ -573,8 +613,8 @@ def test_acetylacetone_solvation_free_energy_with_different_engines_postprocessi
     assert np.isclose(ddG_openMM, ddG_charmm, rtol=1e-1)
     print(ddG_openMM)
     print(ddG_charmm)
-    assert np.isclose(ddG_openMM, -0.6532604462065663)
-    assert np.isclose(ddG_charmm, -0.6591611245563769)
+    assert np.isclose(ddG_openMM, -0.6532604462065663, rtol=1e-3)
+    assert np.isclose(ddG_charmm, -0.6591611245563769, rtol=1e-3)
 
     # keto
     ddG_charmm, dddG, f_charmm = postprocessing(
@@ -605,11 +645,11 @@ def test_acetylacetone_solvation_free_energy_with_different_engines_postprocessi
 @pytest.mark.skipif(
     os.environ.get("TRAVIS", None) == "true", reason="Skip slow test on travis."
 )
-def test_acetylacetone_solvation_free_energy_with_different_engines_postprocessing_only_vacuum():
+def test_acetylacetone_calculate_rsfe_with_different_engines_only_vacuum():
     from ..constants import kT
     from simtk import unit
 
-    conf = "transformato/tests/config/test-acetylacetone-tautomer-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-acetylacetone-tautomer-rsfe.yaml"
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
     )  # NOTE: for preprocessing input_dir is the output dir
@@ -622,6 +662,8 @@ def test_acetylacetone_solvation_free_energy_with_different_engines_postprocessi
         max_snapshots=10_000,
         only_vacuum=True,
     )
+    print(ddG_charmm, dddG)
+
     ddG_openMM, dddG, f_openMM = postprocessing(
         configuration,
         name="acetylacetone-enol",
@@ -629,6 +671,8 @@ def test_acetylacetone_solvation_free_energy_with_different_engines_postprocessi
         max_snapshots=10_000,
         only_vacuum=True,
     )
+    print(ddG_charmm, dddG)
+
     assert np.isclose(
         f_charmm.vacuum_free_energy_differences[0, -1],
         f_openMM.vacuum_free_energy_differences[0, -1],
@@ -643,6 +687,7 @@ def test_acetylacetone_solvation_free_energy_with_different_engines_postprocessi
         max_snapshots=10_000,
         only_vacuum=True,
     )
+    print(ddG_charmm, dddG)
     ddG_openMM, dddG, f_openMM = postprocessing(
         configuration,
         name="acetylacetone-keto",
@@ -650,6 +695,7 @@ def test_acetylacetone_solvation_free_energy_with_different_engines_postprocessi
         max_snapshots=10_000,
         only_vacuum=True,
     )
+    print(ddG_charmm, dddG)
     assert np.isclose(
         f_charmm.vacuum_free_energy_differences[0, -1],
         f_openMM.vacuum_free_energy_differences[0, -1],
@@ -674,13 +720,13 @@ def test_compare_energies_methane_vacuum(caplog):
     import mdtraj as md
 
     env = "vacuum"
-    base = "data/toluene-methane-solvation-free-energy/methane/"
+    base = "data/toluene-methane-rsfe/methane/"
     (
         output_files_methane,
         output_files_toluene,
     ) = _set_output_files_toluene_methane_pair()
 
-    conf = "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-toluene-methane-rsfe.yaml"
 
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
@@ -711,13 +757,13 @@ def test_compare_energies_methane_waterbox(caplog):
     import mdtraj as md
 
     env = "waterbox"
-    base = "data/toluene-methane-solvation-free-energy/methane/"
+    base = "data/toluene-methane-rsfe/methane/"
     (
         output_files_methane,
         output_files_toluene,
     ) = _set_output_files_toluene_methane_pair()
 
-    conf = "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-toluene-methane-rsfe.yaml"
 
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
@@ -748,13 +794,13 @@ def test_compare_energies_toluene_vacuum(caplog):
     import mdtraj as md
 
     env = "vacuum"
-    base = "data/toluene-methane-solvation-free-energy/toluene/"
+    base = "data/toluene-methane-rsfe/toluene/"
     (
         output_files_methane,
         output_files_toluene,
     ) = _set_output_files_toluene_methane_pair()
 
-    conf = "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-toluene-methane-rsfe.yaml"
 
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
@@ -785,13 +831,13 @@ def test_compare_energies_toluene_waterbox(caplog):
     import mdtraj as md
 
     env = "waterbox"
-    base = "data/toluene-methane-solvation-free-energy/toluene/"
+    base = "data/toluene-methane-rsfe/toluene/"
     (
         output_files_methane,
         output_files_toluene,
     ) = _set_output_files_toluene_methane_pair()
 
-    conf = "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-toluene-methane-rsfe.yaml"
 
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
@@ -821,9 +867,9 @@ def test_compare_energies_toluene_waterbox(caplog):
 @pytest.mark.skipif(
     os.environ.get("TRAVIS", None) == "true", reason="Skip slow test on travis."
 )
-def test_toluene_to_methane_solvation_free_energy_with_different_engines_postprocessing():
+def test_toluene_to_methane_calculate_rsfe_with_different_engines():
 
-    conf = "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-toluene-methane-rsfe.yaml"
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
     )  # NOTE: for preprocessing input_dir is the output dir
@@ -879,7 +925,7 @@ def test_toluene_to_methane_solvation_free_energy_with_different_engines_postpro
 def test_postprocessing_thinning():
     from transformato import FreeEnergyCalculator
 
-    conf = "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-toluene-methane-rsfe.yaml"
     configuration = load_config_yaml(
         config=conf, input_dir="data/", output_dir="data"
     )  # NOTE: for preprocessing input_dir is the output dir

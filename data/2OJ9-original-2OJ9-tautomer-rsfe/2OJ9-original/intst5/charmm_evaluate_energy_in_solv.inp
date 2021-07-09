@@ -1,0 +1,61 @@
+*Version September 2020 
+*Run script for CHARMM jobs from transformato 
+*
+
+! Read topology and parameter files 
+stream charmm_toppar.str 
+
+! Read PSF 
+open read unit 10 card name @{top}.psf 
+read psf  unit 10 card
+
+! Read Coordinate 
+open read unit 10 card name @{top}.crd 
+read coor unit 10 card
+
+stream charmm_step3_pbcsetup.str
+
+!
+! Image Setup
+!
+
+open read unit 10 card name charmm_crystal_image.str
+CRYSTAL DEFINE @XTLtype @A @B @C @alpha @beta @gamma
+CRYSTAL READ UNIT 10 CARD
+
+!Image centering by residue
+IMAGE BYRESID XCEN @xcen YCEN @ycen ZCEN @zcen sele resname TIP3 end
+
+!
+! Nonbonded Options
+!
+! cons fix sele segi solv end
+
+nbonds atom vatom VFSWItch bycb -                               ! hard coded switching function
+       ctonnb 10.0 ctofnb 12.0 cutnb 12.0 cutim 12.0 -         ! Add comment why this works
+       inbfrq 1 imgfrq 1 wmin 1.0 cdie eps 1.0 -
+       ewald pmew fftx @fftx ffty @ffty fftz @fftz  kappa .34 spline order 6
+
+energy
+
+open read file unit 41 name ../traj.dcd
+traj query unit 41
+
+set start ?start
+set nframes ?nfile
+set skip ?skip
+
+set nframes @nframes !?nfile
+traj firstu 41 nunit 1 begi @start skip @skip stop @nframes
+
+open form writ unit 51 name ener_solv.log
+echu 51
+set idx 0
+label loop
+traj read
+energy
+echo ?ener
+incr idx by 1
+if @idx .lt. @nframes goto loop
+  
+stop

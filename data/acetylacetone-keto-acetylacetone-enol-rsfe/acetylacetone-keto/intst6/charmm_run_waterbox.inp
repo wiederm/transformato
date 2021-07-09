@@ -1,0 +1,90 @@
+*Version September 2020 
+*Run script for CHARMM jobs from transformato 
+*
+
+! Read topology and parameter files 
+stream charmm_toppar.str 
+
+! Read PSF 
+open read unit 10 card name lig_in_waterbox.psf 
+read psf  unit 10 card
+
+! Read Coordinate 
+open read unit 10 card name lig_in_waterbox.crd 
+read coor unit 10 card
+
+!
+! Setup PBC (Periodic Boundary Condition)
+!
+
+stream charmm_step3_pbcsetup.str
+
+!
+! Image Setup
+!
+
+open read unit 10 card name charmm_crystal_image.str
+CRYSTAL DEFINE @XTLtype @A @B @C @alpha @beta @gamma
+CRYSTAL READ UNIT 10 CARD
+
+!Image centering by residue
+!IMAGE BYRESID XCEN @xcen YCEN @ycen ZCEN @zcen sele resname TIP3 end
+
+!
+! Nonbonded Options
+!
+
+nbonds atom vatom VFSWItch bycb -
+       ctonnb 10.0 ctofnb 12.0 cutnb 16.0 cutim 16.0 -
+       inbfrq -1 imgfrq -1 wmin 1.0 cdie eps 1.0 -
+       ewald pmew fftx @fftx ffty @ffty fftz @fftz  kappa .34 spline order 6
+
+energy
+
+!
+!use a restraint to place center of mass of the molecules near the origin
+!
+
+MMFP
+GEO rcm sphere -
+    Xref @xcen Yref @ycen Zref @zcen XDIR 1.0 YDIR 1.0 ZDIR 1.0 -
+    harmonic FORCE 1.0 select .not. ( hydrogen .or. resname TIP3 ) end
+END
+
+shak bonh para fast sele segi SOLV end
+
+mini SD nstep 500
+mini ABNR nstep 500
+
+!
+! NPT dynamics:
+! you can change
+! nstep  : number of MD steps
+! nprint : print-out frequency
+! nsavc  : the trajectory saving frequency
+!
+
+! estimate Pmass from SYSmass (total system mass)
+! [there could be problems with exreme values, such as  Pmass << SYSmass or Pmass >> SYSmass
+scalar mass stat
+calc Pmass = int ( ?stot  /  50.0 )
+
+energy
+
+energy
+
+set nstep = 5000
+set temp = 303.15
+
+scalar fbeta set 5. sele all end 
+open write unit 13 file name lig_in_waterbox.dcd 
+
+DYNA CPT leap start time 0.001 nstep @nstep -
+     nprint 1000 iprfrq 1000 -
+     iunread -1 iunwri -1 iuncrd 13 iunvel -1 kunit -1 -
+     nsavc 25 nsavv 0 -
+     PCONSTANT pref   1.0  pmass @Pmass  pgamma   20.0 -
+     lang rbuf 0. tbath @temp ilbfrq 0  firstt @temp -
+     ECHECK 0
+
+stop

@@ -1,0 +1,58 @@
+---
+################
+system:
+  ################
+  structure1:
+    name: "2OJ9-original"
+    tlc: "BMI"
+    vacuum:
+      dirname: "vacuum"
+      psf_file_name: "step3_input"
+      crd_file_name: "step3_input"
+      rst_file_name: "step4_equilibration"
+      simulation_parameter: "step5_production.inp"
+      intermediate-filename: "lig_in_vacuum"
+    waterbox:
+      dirname: "waterbox"
+      psf_file_name: "step3_input"
+      crd_file_name: "step3_input"
+      rst_file_name: "step4_equilibration"
+      simulation_parameter: "step5_production.inp"
+      intermediate-filename: "lig_in_waterbox"
+
+  structure2:
+    name: "2OJ9-tautomer"
+    tlc: "BMI"
+    vacuum:
+      dirname: "vacuum"
+      psf_file_name: "step3_input"
+      crd_file_name: "step3_input"
+      rst_file_name: "step4_equilibration"
+      simulation_parameter: "step5_production.inp"
+      intermediate-filename: "lig_in_vacuum"
+    waterbox:
+      dirname: "waterbox"
+      psf_file_name: "step3_input"
+      crd_file_name: "step3_input"
+      rst_file_name: "step4_equilibration"
+      simulation_parameter: "step5_production.inp"
+      intermediate-filename: "lig_in_waterbox"
+
+################
+simulation:
+  ################
+  parameters:
+    nstep: 50
+    nstdcd: 2
+    nstout: 10
+    cons: None
+    dt: 0.001
+    mini_nstep: 100
+    vdw: "switch"
+  GPU: False
+
+  free-energy-type: "rsfe"
+################
+solvation:
+  ################
+  steps_for_equilibration: 1000

@@ -1,4 +1,4 @@
-mini_nstep  = 5000                              # Number of steps for minimization
+mini_nstep  = 1000                              # Number of steps for minimization
 mini_Tol    = 100.0                             # Minimization energy tolerance
                                          
 gen_vel     = yes                               # Generate initial velocities

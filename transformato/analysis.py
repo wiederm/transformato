@@ -2,7 +2,7 @@ from collections import defaultdict
 import logging
 import os
 import pickle
-
+import multiprocessing as mp
 import matplotlib.pyplot as plt
 import mdtraj
 import numpy as np
@@ -71,11 +71,11 @@ class FreeEnergyCalculator(object):
         # decide if the name of the system corresponds to structure1 or structure2
         structure = get_structure_name(configuration, structure_name)
 
-        if configuration["simulation"]["free-energy-type"] == "solvation-free-energy":
+        if configuration["simulation"]["free-energy-type"] == "rsfe":
             self.envs = ("vacuum", "waterbox")
             self.mbar_results = {"waterbox": None, "vacuum": None}
 
-        elif configuration["simulation"]["free-energy-type"] == "binding-free-energy":
+        elif configuration["simulation"]["free-energy-type"] == "rbfe":
             self.envs = ("complex", "waterbox")
             self.mbar_results = {"waterbox": None, "complex": None}
         else:
@@ -166,29 +166,23 @@ class FreeEnergyCalculator(object):
             confs = []
             conf_sub = self.configuration["system"][self.structure][env]
             for lambda_state in tqdm(range(1, nr_of_states + 1)):
-
-                if not os.path.isfile(
-                    f"{self.base_path}/intst{lambda_state}/{conf_sub['intermediate-filename']}.dcd",
-                ):
-                    raise RuntimeError(
-                        f"{self.base_path}/intst{lambda_state}/{conf_sub['intermediate-filename']}.dcd does not exist."
-                    )
+                dcd_path = f"{self.base_path}/intst{lambda_state}/{conf_sub['intermediate-filename']}.dcd"
+                if not os.path.isfile(dcd_path):
+                    raise RuntimeError(f"{dcd_path} does not exist.")
                 traj = mdtraj.load(
-                    f"{self.base_path}/intst{lambda_state}/{conf_sub['intermediate-filename']}.dcd",
+                    f"{dcd_path}",
                     top=f"{self.base_path}/intst{lambda_state}/{conf_sub['intermediate-filename']}.psf",
                 )
                 logger.info(f"Before: {len(traj)}")
-                traj = self._thinning_traj(traj)
                 # NOTE: removing the first 25% confs and thinning
-                if len(traj) < 100:
+                traj = self._thinning_traj(traj)
+                if len(traj) < 10:
                     raise RuntimeError(
-                        f"Below 100 conformations per lambda ({len(traj)}) -- decrease the thinning factor (currently: {self.thinning})."
+                        f"Below 10 conformations per lambda ({len(traj)}) -- decrease the thinning factor (currently: {self.thinning})."
                     )
 
                 confs.append(traj)
-                logger.info(
-                    f"{self.base_path}/intst{lambda_state}/{conf_sub['intermediate-filename']}.dcd"
-                )
+                logger.info(f"{dcd_path}")
                 logger.info(f"Nr of snapshots: {len(traj)}")
                 N_k[env].append(len(traj))
 
@@ -356,21 +350,27 @@ class FreeEnergyCalculator(object):
         save_results: bool,
         engine: str,
     ):
+        from itertools import repeat
+        from transformato.constants import NUM_PROC
 
         #########################################################
         #########################################################
         # main
         logger.debug(f"Evaluating with {engine}")
+        logger.debug(f"using {NUM_PROC} processes for the analysis")
+        ctx = mp.get_context("fork")
+        pool = ctx.Pool(processes=NUM_PROC)
 
         if engine == "openMM":
-            u_kn = np.stack(
-                [
-                    self._evaluated_e_on_all_snapshots_openMM(
-                        snapshots, lambda_state, env
-                    )
-                    for lambda_state in range(1, self.nr_of_states + 1)
-                ]
+            lambda_states = [
+                lambda_state for lambda_state in range(1, self.nr_of_states + 1)
+            ]
+            r = pool.starmap(
+                self._evaluated_e_on_all_snapshots_openMM,
+                zip(repeat(snapshots), lambda_states, repeat(env)),
             )
+
+            u_kn = np.stack([r_i for r_i in r])
 
         elif engine == "CHARMM":
             # write out traj in self.base_path
@@ -609,10 +609,7 @@ class FreeEnergyCalculator(object):
     @property
     def end_state_free_energy_difference(self):
         """DeltaF[lambda=1 --> lambda=0]"""
-        if (
-            self.configuration["simulation"]["free-energy-type"]
-            == "solvation-free-energy"
-        ):
+        if self.configuration["simulation"]["free-energy-type"] == "rsfe":
             return (
                 self.waterbox_free_energy_differences[0, -1]
                 - self.vacuum_free_energy_differences[0, -1],
@@ -620,10 +617,7 @@ class FreeEnergyCalculator(object):
                 + self.vacuum_free_energy_difference_uncertanties[0, -1],
             )
 
-        elif (
-            self.configuration["simulation"]["free-energy-type"]
-            == "binding-free-energy"
-        ):
+        elif self.configuration["simulation"]["free-energy-type"] == "rbfe":
             return (
                 self.complex_free_energy_differences[0, -1]
                 - self.waterbox_free_energy_differences[0, -1],
@@ -634,10 +628,7 @@ class FreeEnergyCalculator(object):
             raise RuntimeError()
 
     def show_summary(self):
-        if (
-            self.configuration["simulation"]["free-energy-type"]
-            == "solvation-free-energy"
-        ):
+        if self.configuration["simulation"]["free-energy-type"] == "rsfe":
             self.plot_vacuum_free_energy_overlap()
             self.plot_waterbox_free_energy_overlap()
             self.plot_vacuum_free_energy()

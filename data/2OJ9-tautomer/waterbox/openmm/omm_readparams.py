@@ -6,7 +6,7 @@ omm_readparams.py
 This module is for reading coordinates and parameters in OpenMM.
 
 Correspondance: jul316@lehigh.edu or wonpil@lehigh.edu
-Last update: March 29, 2017
+Last update: June 18, 2021
 """
 
 import os, json
@@ -15,12 +15,14 @@ from simtk.unit import *
 from simtk.openmm import *
 from simtk.openmm.app import *
 
-def read_psf(filename):
-    psf = CharmmPsfFile(filename)
-    return psf
+def read_top(filename, fftype='CHARMM'):
+    if   fftype == 'CHARMM': top = CharmmPsfFile(filename)
+    elif fftype == 'AMBER':  top = AmberPrmtopFile(filename)
+    return top
 
-def read_crd(filename):
-    crd = CharmmCrdFile(filename)
+def read_crd(filename, fftype='CHARMM'):
+    if   fftype == 'CHARMM': crd = CharmmCrdFile(filename)
+    elif fftype == 'AMBER':  crd = AmberInpcrdFile(filename)
     return crd
 
 def read_charmm_rst(filename):
@@ -69,8 +71,15 @@ def read_params(filename):
     return params
 
 def read_box(psf, filename):
-    sysinfo = json.load(open(filename, 'r'))
-    boxlx, boxly, boxlz = map(float, sysinfo['dimensions'][:3])
+    try:
+        sysinfo = json.load(open(filename, 'r'))
+        boxlx, boxly, boxlz = map(float, sysinfo['dimensions'][:3])
+    except:
+        for line in open(filename, 'r'):
+            segments = line.split('=')
+            if segments[0].strip() == "BOXLX": boxlx = float(segments[1])
+            if segments[0].strip() == "BOXLY": boxly = float(segments[1])
+            if segments[0].strip() == "BOXLZ": boxlz = float(segments[1])
     psf.setBox(boxlx*angstroms, boxly*angstroms, boxlz*angstroms)
     return psf
 

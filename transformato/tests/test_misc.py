@@ -13,7 +13,7 @@ import numpy as np
 def test_reduced_energy():
     from transformato.constants import temperature as T
 
-    # with openMM generated traj evaluated with openMM   
+    # with openMM generated traj evaluated with openMM
     e = -41264.39524669979 * unit.kilojoule_per_mole
     rE = return_reduced_potential(e, volume=0, temperature=T)
     print(rE)
@@ -27,7 +27,7 @@ def test_reduced_energy():
 
     # energy term in CHARMM traj
     # DYNA>        0      0.00000  -7775.74490   1914.51007  -9690.25498    377.14828
-    e = -9690.25498 * unit.kilocalorie_per_mole #ENERGgy
+    e = -9690.25498 * unit.kilocalorie_per_mole  # ENERGgy
     rE = return_reduced_potential(e, volume=0, temperature=T)
     print(rE)
     assert np.isclose(rE, -16085.501605902184)
@@ -49,7 +49,7 @@ def test_change_platform():
     from ..utils import load_config_yaml
 
     configuration = load_config_yaml(
-        config="transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml",
+        config="transformato/tests/config/test-toluene-methane-rsfe.yaml",
         input_dir=".",
         output_dir=".",
     )

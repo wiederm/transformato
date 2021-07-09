@@ -36,7 +36,7 @@ class SystemStructure(object):
         self.cgenff_version: float
         self.envs: set
         # running a binding-free energy calculation?
-        if configuration["simulation"]["free-energy-type"] == "binding-free-energy":
+        if configuration["simulation"]["free-energy-type"] == "rbfe":
             self.envs = set(["complex", "waterbox"])
             for env in self.envs:
                 parameter = self._read_parameters(env)
@@ -57,7 +57,7 @@ class SystemStructure(object):
             )
             self.graph: nx.Graph = self._mol_to_nx(self.mol)
 
-        elif configuration["simulation"]["free-energy-type"] == "solvation-free-energy":
+        elif configuration["simulation"]["free-energy-type"] == "rsfe":
             self.envs = set(["waterbox", "vacuum"])
             for env in self.envs:
                 parameter = self._read_parameters(env)

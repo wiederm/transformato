@@ -33,12 +33,14 @@
 ../toppar/toppar_all36_lipid_cholesterol.str
 ../toppar/toppar_all36_lipid_dag.str
 ../toppar/toppar_all36_lipid_inositol.str
+../toppar/toppar_all36_lipid_lnp.str
 ../toppar/toppar_all36_lipid_lps.str
 ../toppar/toppar_all36_lipid_mycobacterial.str
 ../toppar/toppar_all36_lipid_miscellaneous.str
 ../toppar/toppar_all36_lipid_model.str
 ../toppar/toppar_all36_lipid_prot.str
 ../toppar/toppar_all36_lipid_sphingo.str
+../toppar/toppar_all36_lipid_tag.str
 ../toppar/toppar_all36_lipid_yeast.str
 ../toppar/toppar_all36_lipid_hmmm.str
 ../toppar/toppar_all36_lipid_detergent.str
@@ -48,6 +50,6 @@
 ../toppar/toppar_all36_carb_imlab.str
 ../toppar/toppar_all36_label_spin.str
 ../toppar/toppar_all36_label_fluorophore.str
-../unk/unk.rtf
-../unk/unk.prm
+../bmi/bmi.rtf
+../bmi/bmi.prm
 

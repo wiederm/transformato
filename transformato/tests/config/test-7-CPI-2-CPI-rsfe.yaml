@@ -1,0 +1,58 @@
+---
+################
+system:
+  ################
+  structure1:
+    name: "2-CPI"
+    tlc: "UNL"
+    vacuum:
+      dirname: "vacuum"
+      psf_file_name: "step3_charmm2omm"
+      crd_file_name: "step3_charmm2omm"
+      rst_file_name: "step4_equilibration"
+      simulation_parameter: "step5_production.inp"
+      intermediate-filename: "lig_in_vacuum"
+    waterbox:
+      dirname: "waterbox"
+      psf_file_name: "step3_charmm2omm"
+      crd_file_name: "step3_charmm2omm"
+      rst_file_name: "step4_equilibration"
+      simulation_parameter: "step5_production.inp"
+      intermediate-filename: "lig_in_waterbox"
+
+  structure2:
+    name: "7-CPI"
+    tlc: "UNL"
+    vacuum:
+      dirname: "vacuum"
+      psf_file_name: "step3_charmm2omm"
+      crd_file_name: "step3_charmm2omm"
+      rst_file_name: "step4_equilibration"
+      simulation_parameter: "step5_production.inp"
+      intermediate-filename: "lig_in_vacuum"
+    waterbox:
+      dirname: "waterbox"
+      psf_file_name: "step3_charmm2omm"
+      crd_file_name: "step3_charmm2omm"
+      rst_file_name: "step4_equilibration"
+      simulation_parameter: "step5_production.inp"
+      intermediate-filename: "lig_in_waterbox"
+
+################
+simulation:
+  ################
+  parameters:
+    nstep: 5000000
+    nstdcd: 5000
+    nstout: 5000
+    cons: None
+    dt: 0.001
+    switch: "vswitch"
+    mini_nstep: 1000
+
+  GPU: True
+  free-energy-type: "rsfe"
+################
+solvation:
+  ################
+  steps_for_equilibration: 1000

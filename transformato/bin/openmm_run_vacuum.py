@@ -18,7 +18,7 @@ args = parser.parse_args()
 
 inputs = read_inputs(args.inpfile)
 params = read_params(args.toppar)
-psf = read_psf(args.psffile)
+psf = CharmmPsfFile(args.psffile)
 crd = read_crd(args.crdfile)
 
 # Build system

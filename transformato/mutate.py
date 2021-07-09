@@ -275,6 +275,7 @@ class ProposeMutationRoute(object):
         # match the real/dummy atoms
         match_terminal_atoms_cc1 = self._match_terminal_real_and_dummy_atoms_for_mol1()
         match_terminal_atoms_cc2 = self._match_terminal_real_and_dummy_atoms_for_mol2()
+        logger.info("Find connected dummy regions")
         # define connected dummy regions
         if not connected_dummy_regions_cc1:
             connected_dummy_regions_cc1 = self._find_connected_dummy_regions(
@@ -398,6 +399,21 @@ class ProposeMutationRoute(object):
             print(f"Idx: {idx} already in common core.")
             return
         self.added_indeces[name].append(idx)
+
+    def get_idx_not_in_common_core_for_mol1(self) -> list:
+        return self._get_idx_not_in_common_core_for_mol("m1")
+
+    def get_idx_not_in_common_core_for_mol2(self) -> list:
+        return self._get_idx_not_in_common_core_for_mol("m2")
+
+    def _get_idx_not_in_common_core_for_mol(self, mol_name: str) -> list:
+
+        dummy_list_mol = [
+            atom.GetIdx()
+            for atom in self.mols[mol_name].GetAtoms()
+            if atom.GetIdx() not in self._get_common_core(mol_name)
+        ]
+        return dummy_list_mol
 
     def get_common_core_idx_mol1(self) -> list:
         """
@@ -1394,7 +1410,7 @@ class Mutation(object):
         vdw_atom_idx: List[int] = [],
         steric_mutation_to_default: bool = False,
     ):
-        """ Performs the mutation """
+        """Performs the mutation"""
 
         if lambda_value_electrostatic < 0.0 or lambda_value_electrostatic > 1.0:
             raise RuntimeError("Lambda value for LJ needs to be between 0.0 and 1.0.")
@@ -1491,6 +1507,7 @@ class Mutation(object):
         )
 
         if not (np.isclose(new_charge, total_charge, rtol=1e-4)):
+            print(psf)
             raise RuntimeError(
                 f"Charge compensation failed. Introducing non integer total charge: {new_charge}. Target total charge: {total_charge}."
             )
@@ -1531,7 +1548,7 @@ def mutate_pure_tautomers(
     system2: SystemStructure,
     configuration,
     single_state=False,
-    nr_of_bonded_windows:int=4
+    nr_of_bonded_windows: int = 4,
 ):
 
     from transformato import (
@@ -1570,7 +1587,7 @@ def mutate_pure_tautomers(
     output_files_t1.append(o)
 
     # transform common core
-    for lambda_value in np.linspace(1, 0, nr_of_bonded_windows+1)[1:]:
+    for lambda_value in np.linspace(1, 0, nr_of_bonded_windows + 1)[1:]:
         # turn off charges
         o, intst = i.write_state(
             mutation_conf=mutation_list["transform"],

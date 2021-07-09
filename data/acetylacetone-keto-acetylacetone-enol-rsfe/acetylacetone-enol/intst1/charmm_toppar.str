@@ -1,0 +1,58 @@
+* Simplified toppar script 
+* Version from 2021-04-04 
+*
+
+! Read Protein Topology and Parameter 
+open read card unit 10 name ./toppar/top_all36_prot.rtf 
+read  rtf card unit 10 
+    
+open read card unit 20 name ./toppar/par_all36m_prot.prm 
+read para card unit 20 flex 
+
+! Read Nucleic Acids 
+open read card unit 10 name ./toppar/top_all36_na.rtf 
+read  rtf card unit 10 append 
+    
+open read card unit 20 name ./toppar/par_all36_na.prm 
+read para card unit 20 append flex
+    
+! Read Carbohydrates 
+open read card unit 10 name ./toppar/top_all36_carb.rtf 
+read  rtf card unit 10 append 
+    
+open read card unit 20 name ./toppar/par_all36_carb.prm 
+read para card unit 20 append flex 
+
+! Read Lipids 
+open read card unit 10 name ./toppar/top_all36_lipid.rtf 
+read  rtf card unit 10 append 
+    
+open read card unit 20 name ./toppar/par_all36_lipid.prm 
+read para card unit 20 append flex
+    
+!Read CGENFF 
+open read card unit 10 name ./toppar/top_all36_cgenff.rtf 
+read  rtf card unit 10 append 
+    
+open read card unit 20 name ./toppar/par_all36_cgenff.prm 
+read para card unit 20 append flex
+    
+! Additional topologies and parameters for water and ions 
+stream ./toppar/toppar_water_ions.str
+
+! Read unk RTF 
+open read unit 10 card name unk_g.rtf 
+read rtf card unit 10 append
+
+! Read unk prm 
+open read unit 10 card name unk.prm 
+read para card unit 10 append flex
+
+! Read dummy_atom RTF 
+open read unit 10 card name dummy_atom_definitions.rtf 
+read rtf card unit 10 append
+
+! Read dummy_atom prm 
+open read unit 10 card name dummy_parameters.prm 
+read para card unit 10 append flex
+

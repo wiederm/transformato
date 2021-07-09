@@ -1,0 +1,50 @@
+*Version September 2020 
+*Run script for CHARMM jobs from transformato 
+*
+
+! Read topology and parameter files 
+stream charmm_toppar.str 
+
+! Read PSF 
+open read unit 10 card name lig_in_vacuum.psf 
+read psf  unit 10 card
+
+! Read Coordinate 
+open read unit 10 card name lig_in_vacuum.crd 
+read coor unit 10 card
+
+!coor orie sele all end ! put the molecule at the origin
+
+MMFP
+GEO rcm sphere -
+    Xref 0.0 Yref 0.0 Zref 0.0 XDIR 1.0 YDIR 1.0 ZDIR 1.0 -
+    harmonic FORCE 1.0 select .not. ( hydrogen .or. resname TIP3 ) end
+END
+
+set ctofnb 990.
+set ctonnb 980.
+set cutnb  1000.
+
+nbonds ctonnb @ctonnb ctofnb @ctofnb cutnb @cutnb -
+  atom swit vatom VFSWItch -
+  inbfrq 1 
+
+energy   inbfrq 1
+energy   inbfrq 0
+
+mini sd nstep 200
+
+set nstep = 5000 
+set temp = 303.15
+
+scalar fbeta set 5. sele all end  
+open write unit 21 file name lig_in_vacuum.dcd
+ 
+DYNA lang leap start time 0.001 nstep @nstep -
+    nprint 1000 iprfrq 1000 -
+    iunread -1 iunwri -1 iuncrd 21 iunvel -1 kunit -1 -
+    nsavc 25 nsavv 0 -
+    rbuf 0. tbath @temp ilbfrq 0  firstt @temp -
+    ECHECK 0
+    
+stop

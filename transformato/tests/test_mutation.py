@@ -95,18 +95,18 @@ def generate_system(output_file_base, env):
 
 def _set_output_files_2oj9_tautomer_pair():
     output_files_t1 = [
-        "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-original/intst1/",
-        "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-original/intst2/",
-        "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-original/intst3/",
-        "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-original/intst4/",
-        "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-original/intst5/",
-        "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-original/intst6/",
-        "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-original/intst7/",
+        "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-original/intst1/",
+        "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-original/intst2/",
+        "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-original/intst3/",
+        "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-original/intst4/",
+        "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-original/intst5/",
+        "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-original/intst6/",
+        "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-original/intst7/",
     ]
     output_files_t2 = [
-        "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-tautomer/intst1/",
-        "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-tautomer/intst2/",
-        "data/2OJ9-original-2OJ9-tautomer-solvation-free-energy/2OJ9-tautomer/intst3/",
+        "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-tautomer/intst1/",
+        "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-tautomer/intst2/",
+        "data/2OJ9-original-2OJ9-tautomer-rsfe/2OJ9-tautomer/intst3/",
     ]
 
     return output_files_t1, output_files_t2
@@ -114,18 +114,18 @@ def _set_output_files_2oj9_tautomer_pair():
 
 def _set_output_files_acetylaceton_tautomer_pair():
     output_files_enol = [
-        "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-enol/intst1/",
-        "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-enol/intst2/",
-        "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-enol/intst3/",
+        "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-enol/intst1/",
+        "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-enol/intst2/",
+        "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-enol/intst3/",
     ]
     output_files_keto = [
-        "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-keto/intst1/",
-        "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-keto/intst2/",
-        "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-keto/intst3/",
-        "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-keto/intst4/",
-        "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-keto/intst5/",
-        "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-keto/intst6/",
-        "data/acetylacetone-keto-acetylacetone-enol-solvation-free-energy/acetylacetone-keto/intst7/",
+        "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-keto/intst1/",
+        "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-keto/intst2/",
+        "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-keto/intst3/",
+        "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-keto/intst4/",
+        "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-keto/intst5/",
+        "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-keto/intst6/",
+        "data/acetylacetone-keto-acetylacetone-enol-rsfe/acetylacetone-keto/intst7/",
     ]
 
     return output_files_enol, output_files_keto
@@ -133,24 +133,24 @@ def _set_output_files_acetylaceton_tautomer_pair():
 
 def _set_output_files_toluene_methane_pair():
     output_files_methane = [
-        "data/toluene-methane-solvation-free-energy/methane/intst1/",
-        "data/toluene-methane-solvation-free-energy/methane/intst2/",
-        "data/toluene-methane-solvation-free-energy/methane/intst3/",
+        "data/toluene-methane-rsfe/methane/intst1/",
+        "data/toluene-methane-rsfe/methane/intst2/",
+        "data/toluene-methane-rsfe/methane/intst3/",
     ]
     output_files_toluene = [
-        "data/toluene-methane-solvation-free-energy/toluene/intst1/",
-        "data/toluene-methane-solvation-free-energy/toluene/intst2/",
-        "data/toluene-methane-solvation-free-energy/toluene/intst3/",
-        "data/toluene-methane-solvation-free-energy/toluene/intst4/",
-        "data/toluene-methane-solvation-free-energy/toluene/intst5/",
-        "data/toluene-methane-solvation-free-energy/toluene/intst6/",
-        "data/toluene-methane-solvation-free-energy/toluene/intst7/",
-        "data/toluene-methane-solvation-free-energy/toluene/intst8/",
-        "data/toluene-methane-solvation-free-energy/toluene/intst9/",
-        "data/toluene-methane-solvation-free-energy/toluene/intst10/",
-        "data/toluene-methane-solvation-free-energy/toluene/intst11/",
-        "data/toluene-methane-solvation-free-energy/toluene/intst12/",
-        "data/toluene-methane-solvation-free-energy/toluene/intst13/",
+        "data/toluene-methane-rsfe/toluene/intst1/",
+        "data/toluene-methane-rsfe/toluene/intst2/",
+        "data/toluene-methane-rsfe/toluene/intst3/",
+        "data/toluene-methane-rsfe/toluene/intst4/",
+        "data/toluene-methane-rsfe/toluene/intst5/",
+        "data/toluene-methane-rsfe/toluene/intst6/",
+        "data/toluene-methane-rsfe/toluene/intst7/",
+        "data/toluene-methane-rsfe/toluene/intst8/",
+        "data/toluene-methane-rsfe/toluene/intst9/",
+        "data/toluene-methane-rsfe/toluene/intst10/",
+        "data/toluene-methane-rsfe/toluene/intst11/",
+        "data/toluene-methane-rsfe/toluene/intst12/",
+        "data/toluene-methane-rsfe/toluene/intst13/",
     ]
 
     return output_files_methane, output_files_toluene
@@ -161,7 +161,7 @@ def test_proposed_mutation_mcs():
     from rdkit.Chem import rdFMCS
 
     for conf in [
-        "transformato/tests/config/test-2oj9-solvation-free-energy.yaml",
+        "transformato/tests/config/test-2oj9-rsfe.yaml",
     ]:
         configuration = load_config_yaml(config=conf, input_dir="data/", output_dir=".")
         s1 = SystemStructure(configuration, "structure1")
@@ -171,51 +171,51 @@ def test_proposed_mutation_mcs():
         # find mcs
         a._find_mcs("m1", "m2")
 
-        assert str(a.s1_tlc) == "UNK"
+        assert str(a.s1_tlc) == "BMI"
         assert str(a.s2_tlc) == "UNK"
 
         cc1 = set(
             [
                 0,
-                4,
-                9,
-                7,
+                3,
                 6,
+                5,
+                4,
+                14,
                 24,
-                39,
-                37,
-                41,
-                36,
-                40,
+                23,
+                26,
+                22,
+                25,
+                17,
+                16,
                 28,
                 27,
-                43,
-                42,
-                45,
+                29,
                 46,
                 47,
                 48,
+                45,
+                41,
                 44,
-                29,
-                38,
                 2,
+                7,
                 11,
-                20,
-                16,
-                14,
-                18,
-                22,
-                21,
-                23,
-                19,
-                15,
-                17,
-                12,
-                13,
-                3,
+                9,
                 8,
                 10,
-                5,
+                13,
+                12,
+                39,
+                38,
+                36,
+                37,
+                34,
+                35,
+                30,
+                32,
+                33,
+                31,
             ]
         )
         cc2 = set(
@@ -263,6 +263,9 @@ def test_proposed_mutation_mcs():
             ]
         )
 
+        print(a.get_common_core_idx_mol1())
+        print(a.get_common_core_idx_mol2())
+
         assert set(a.get_common_core_idx_mol1()) == cc1
         assert set(a.get_common_core_idx_mol2()) == cc2
         a.bondCompare = rdFMCS.BondCompare.CompareOrder
@@ -272,27 +275,27 @@ def test_proposed_mutation_mcs():
         cc1 = set(
             [
                 0,
-                4,
-                9,
-                10,
-                5,
+                3,
+                6,
+                33,
+                31,
+                14,
                 24,
-                39,
-                37,
-                41,
-                36,
-                40,
+                23,
+                26,
+                22,
+                25,
+                17,
+                16,
                 28,
                 27,
-                43,
-                42,
-                45,
+                29,
                 46,
                 47,
                 48,
+                45,
+                41,
                 44,
-                29,
-                38,
             ]
         )
         cc2 = set(
@@ -328,9 +331,7 @@ def test_proposed_mutation_mcs():
         assert set(a.get_common_core_idx_mol2()) == cc2
         assert set(a.get_common_core_idx_mol1()) == cc1
 
-    for conf in [
-        "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml"
-    ]:
+    for conf in ["transformato/tests/config/test-toluene-methane-rsfe.yaml"]:
         configuration = load_config_yaml(config=conf, input_dir="data/", output_dir=".")
         s1 = SystemStructure(configuration, "structure1")
         s2 = SystemStructure(configuration, "structure2")
@@ -363,7 +364,7 @@ def test_proposed_mutation_terminal_dummy_real_atom_match():
     from rdkit.Chem import rdFMCS
 
     for conf in [
-        "transformato/tests/config/test-7-CPI-2-CPI-solvation-free-energy.yaml",
+        "transformato/tests/config/test-7-CPI-2-CPI-rsfe.yaml",
     ]:
         configuration = load_config_yaml(config=conf, input_dir="data/", output_dir=".")
         s1 = SystemStructure(configuration, "structure1")
@@ -408,7 +409,7 @@ def test_find_connected_dummy_regions1():
 
     from rdkit.Chem import rdFMCS
 
-    conf = "transformato/tests/config/test-7-CPI-2-CPI-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-7-CPI-2-CPI-rsfe.yaml"
     configuration = load_config_yaml(config=conf, input_dir="data/", output_dir=".")
     s1 = SystemStructure(configuration, "structure1")
     s2 = SystemStructure(configuration, "structure2")
@@ -459,7 +460,7 @@ def test_find_connected_dummy_regions2():
     from rdkit.Chem import rdFMCS
 
     ##################################################
-    conf = "transformato/tests/config/test-2oj9-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-2oj9-rsfe.yaml"
     configuration = load_config_yaml(config=conf, input_dir="data/", output_dir=".")
     s1 = SystemStructure(configuration, "structure1")
     s2 = SystemStructure(configuration, "structure2")
@@ -494,6 +495,7 @@ def test_find_connected_dummy_regions2():
     )
 
     print(connected_dummy_regions_cc1)
+    print(connected_dummy_regions_cc2)
 
     dummy_region_m2 = transformato.mutate.DummyRegion(
         "m2",
@@ -504,16 +506,18 @@ def test_find_connected_dummy_regions2():
     )
 
     print(dummy_region_m1.connected_dummy_regions)
+    print(dummy_region_m2.connected_dummy_regions)
+
     # match
     assert dummy_region_m1.connected_dummy_regions[0] == {
-        32,
-        33,
-        34,
-        35,
-        25,
-        26,
-        30,
-        31,
+        40,
+        42,
+        43,
+        15,
+        18,
+        19,
+        20,
+        21,
     }
 
     assert dummy_region_m1.connected_dummy_regions[1] == {1}
@@ -526,7 +530,7 @@ def test_find_connected_dummy_regions2():
         dummy_region_m1.return_connecting_real_atom(
             dummy_region_m1.connected_dummy_regions[0]
         )
-        == 27
+        == 16
     )
 
     assert (
@@ -538,26 +542,23 @@ def test_find_connected_dummy_regions2():
 
     print(f"Matched dummy region: {dummy_region_m1.lj_default}")
     print(f"Matched dummy region: {dummy_region_m2.lj_default}")
-    assert dummy_region_m1.lj_default == [1, 30]
+    assert dummy_region_m1.lj_default == [1, 18]
     assert dummy_region_m2.lj_default == [1, 39]
 
 
-def test_common_core_system1():
+def test_common_core_for_multiple_systems():
 
     for conf in [
-        "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml",
-        "transformato/tests/config/test-neopentane-methane-solvation-free-energy.yaml",
-        "transformato/tests/config/test-ethane-methanol-solvation-free-energy.yaml",
+        "transformato/tests/config/test-toluene-methane-rsfe.yaml",
+        "transformato/tests/config/test-neopentane-methane-rsfe.yaml",
+        "transformato/tests/config/test-ethane-methanol-rsfe.yaml",
     ]:
         configuration = load_config_yaml(config=conf, input_dir="data/", output_dir=".")
         s1 = SystemStructure(configuration, "structure1")
         s2 = SystemStructure(configuration, "structure2")
 
         a = ProposeMutationRoute(s1, s2)
-        if (
-            conf
-            == "transformato/tests/config/test-neopentane-methane-solvation-free-energy.yaml"
-        ):
+        if conf == "transformato/tests/config/test-neopentane-methane-rsfe.yaml":
             a.propose_common_core()
             a.finish_common_core(
                 connected_dummy_regions_cc1=[
@@ -591,13 +592,13 @@ def setup_systems(conf):
     return (configuration, mutation_list_mol1, mutation_list_mol2, i_s1, i_s2)
 
 
-def test_mutation_list():
+def test_generate_mutation_list_for_multiple_systems():
 
     for conf, system_name in zip(
         [
-            "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml",
-            "transformato/tests/config/test-neopentane-methane-solvation-free-energy.yaml",
-            "transformato/tests/config/test-ethane-methanol-solvation-free-energy.yaml",
+            "transformato/tests/config/test-toluene-methane-rsfe.yaml",
+            "transformato/tests/config/test-neopentane-methane-rsfe.yaml",
+            "transformato/tests/config/test-ethane-methanol-rsfe.yaml",
         ],
         ["toluene-methane", "neopentane-methane", "ethane-ethanol"],
     ):
@@ -645,19 +646,16 @@ def test_mutation_list():
             )
 
 
-def test_endpoint_mutation():
+def test_write_endpoint_state():
     # test physical endpoint systems
-    from ..utils import print_mutations
-    from ..mutate import MutationDefinition
-
     for conf in [
-        "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml",
-        "transformato/tests/config/test-ethane-methanol-solvation-free-energy.yaml",
+        "transformato/tests/config/test-toluene-methane-rsfe.yaml",
+        "transformato/tests/config/test-ethane-methanol-rsfe.yaml",
     ]:
         (
-            configuration,
-            mutation_list_mol1,
-            mutation_list_mol2,
+            _,
+            _,
+            _,
             i_s1,
             i_s2,
         ) = setup_systems(conf)
@@ -669,14 +667,12 @@ def test_endpoint_mutation():
         shutil.rmtree(output_file_base)
 
 
-def test_charge_mutation_test_system1():
-    from ..utils import print_mutations
-    from ..mutate import MutationDefinition
+def test_charges_at_endstate():
 
     for conf, system_name in zip(
         [
-            "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml",
-            "transformato/tests/config/test-ethane-methanol-solvation-free-energy.yaml",
+            "transformato/tests/config/test-toluene-methane-rsfe.yaml",
+            "transformato/tests/config/test-ethane-methanol-rsfe.yaml",
         ],
         ["toluene-methane" "ethane-ethanol"],
     ):
@@ -715,7 +711,7 @@ def test_charge_mutation_test_system1():
 
 def test_setup_dual_junction_system():
 
-    conf = "transformato/tests/config/test-2oj9-solvation-free-energy.yaml"
+    conf = "transformato/tests/config/test-2oj9-rsfe.yaml"
     configuration, mutation_list_mol1, mutation_list_mol2, i_s1, i_s2 = setup_systems(
         conf
     )
@@ -746,13 +742,13 @@ def test_setup_dual_junction_system():
         shutil.rmtree(f)
 
 
-def test_charge_mutation_test_system2():
+def test_charge_mutation_for_multiple_systems():
 
     for conf, system_name in zip(
         [
-            "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml",
-            "transformato/tests/config/test-neopentane-methane-solvation-free-energy.yaml",
-            "transformato/tests/config/test-ethane-methanol-solvation-free-energy.yaml",
+            "transformato/tests/config/test-toluene-methane-rsfe.yaml",
+            "transformato/tests/config/test-neopentane-methane-rsfe.yaml",
+            "transformato/tests/config/test-ethane-methanol-rsfe.yaml",
         ],
         ["toluene-methane", "neopentane-methane", "ethane-methanol"],
     ):
@@ -813,9 +809,9 @@ def test_vdw_mutation_for_hydrogens_system1():
 
     for conf, system_name in zip(
         [
-            "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml",
-            "transformato/tests/config/test-neopentane-methane-solvation-free-energy.yaml",
-            "transformato/tests/config/test-ethane-methanol-solvation-free-energy.yaml",
+            "transformato/tests/config/test-toluene-methane-rsfe.yaml",
+            "transformato/tests/config/test-neopentane-methane-rsfe.yaml",
+            "transformato/tests/config/test-ethane-methanol-rsfe.yaml",
         ],
         ["toluene-methane", "neopentane-methane", "ethane-methanol"],
     ):
@@ -892,7 +888,7 @@ def test_vdw_mutation_for_hydrogens_system2():
 
     for conf, system_name in zip(
         [
-            "transformato/tests/config/test-7-CPI-2-CPI-solvation-free-energy.yaml",
+            "transformato/tests/config/test-7-CPI-2-CPI-rsfe.yaml",
         ],
         ["7-CPI-2-CPI"],
     ):
@@ -965,7 +961,7 @@ def test_vdw_mutation_for_hydrogens_system2():
 def test_bonded_mutation():
 
     for conf in [
-        "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml",
+        "transformato/tests/config/test-toluene-methane-rsfe.yaml",
     ]:
 
         configuration = load_config_yaml(config=conf, input_dir="data/", output_dir=".")
@@ -1344,7 +1340,7 @@ def test_bonded_mutation_energies_t2_s1(caplog):
     )
 
     assert np.isclose(
-        e_t2_s1.value_in_unit(unit.kilocalorie_per_mole), 12.152228076282555
+        e_t2_s1.value_in_unit(unit.kilocalorie_per_mole), 12.152228076282555, rtol=1e-4
     )
 
 
@@ -1384,9 +1380,9 @@ def test_bonded_mutation_energies_t2_s3(caplog):
 def test_bonded_mutation_atoms(caplog):
     caplog.set_level(logging.CRITICAL)
 
-    from .test_mutation import setup_2OJ9_tautomer_pair
+    from .test_mutation import setup_2OJ9_tautomer_pair_rsfe
 
-    (output_files_t1, output_files_t2), _, p = setup_2OJ9_tautomer_pair()
+    (output_files_t1, output_files_t2), _, p = setup_2OJ9_tautomer_pair_rsfe()
     psf_at_endstate_t1, _ = generate_psf(output_files_t1[0], "vacuum")
     prm_at_endstate_t1 = {
         a.idx: (a.charge, a.sigma, a.epsilon) for a in psf_at_endstate_t1.atoms
@@ -1427,9 +1423,9 @@ def test_bonded_mutation_atoms(caplog):
 def test_bonded_mutation_bonds(caplog):
     caplog.set_level(logging.CRITICAL)
 
-    from .test_mutation import setup_2OJ9_tautomer_pair
+    from .test_mutation import setup_2OJ9_tautomer_pair_rsfe
 
-    (output_files_t1, output_files_t2), _, p = setup_2OJ9_tautomer_pair()
+    (output_files_t1, output_files_t2), _, p = setup_2OJ9_tautomer_pair_rsfe()
     ##################
     psf_at_endstate_t1, _ = generate_psf(output_files_t1[0], "vacuum")
     prm_at_endstate_t1 = {
@@ -1476,9 +1472,9 @@ def test_bonded_mutation_bonds(caplog):
 def test_bonded_mutation_angles(caplog):
     caplog.set_level(logging.CRITICAL)
     from copy import copy
-    from .test_mutation import setup_2OJ9_tautomer_pair
+    from .test_mutation import setup_2OJ9_tautomer_pair_rsfe
 
-    (output_files_t1, output_files_t2), _, p = setup_2OJ9_tautomer_pair()
+    (output_files_t1, output_files_t2), _, p = setup_2OJ9_tautomer_pair_rsfe()
     ##################
     # psf_at_endstate_t1 = generate_psf(output_files_t1[0], "vacuum")
     # prm_at_endstate_t1 = {
@@ -1546,9 +1542,9 @@ def test_bonded_mutation_angles(caplog):
 def test_bonded_mutation_dihedrals(caplog):
     caplog.set_level(logging.CRITICAL)
 
-    from .test_mutation import setup_2OJ9_tautomer_pair
+    from .test_mutation import setup_2OJ9_tautomer_pair_rsfe
 
-    (output_files_t1, output_files_t2), _, p = setup_2OJ9_tautomer_pair()
+    (output_files_t1, output_files_t2), _, p = setup_2OJ9_tautomer_pair_rsfe()
     # ##################
     # psf_at_endstate_t1 = generate_psf(output_files_t1[0], "vacuum")
     # prm_at_endstate_t1 = {
@@ -1591,7 +1587,7 @@ def test_bonded_mutation_dihedrals(caplog):
         .getPotentialEnergy()
     )
     assert np.isclose(
-        e_at_t2_cc.value_in_unit(unit.kilocalorie_per_mole), 45.06542169452752
+        e_at_t2_cc.value_in_unit(unit.kilocalorie_per_mole), 63.36457961831904
     )
     ####################################
     ####################################
@@ -1660,9 +1656,9 @@ def test_vdw_mutation_for_hydrogens_and_heavy_atoms():
 
     for conf, system_name in zip(
         [
-            "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml",
-            "transformato/tests/config/test-neopentane-methane-solvation-free-energy.yaml",
-            "transformato/tests/config/test-ethane-methanol-solvation-free-energy.yaml",
+            "transformato/tests/config/test-toluene-methane-rsfe.yaml",
+            "transformato/tests/config/test-neopentane-methane-rsfe.yaml",
+            "transformato/tests/config/test-ethane-methanol-rsfe.yaml",
         ],
         ["toluene-methane", "neopentane-methane", "ethane-methanol"],
     ):
@@ -1796,15 +1792,51 @@ def test_vdw_mutation_for_hydrogens_and_heavy_atoms():
                             rtol=1e-3,
                         )
 
-        shutil.rmtree(f"{system_name}-solvation-free-energy")
+        shutil.rmtree(f"{system_name}-rsfe")
 
 
-def setup_2OJ9_tautomer_pair(single_state=False, conf_path="", nr_of_bonded_windows=4):
+def setup_2OJ9_tautomer_pair_rsfe(
+    single_state=False, conf_path="", nr_of_bonded_windows=4
+):
     from ..mutate import mutate_pure_tautomers
     from ..constants import check_platform
 
     if not conf_path:
-        conf_path = "transformato/tests/config/test-2oj9-tautomer-pair-solvation-free-energy.yaml"
+        conf_path = "transformato/tests/config/test-2oj9-tautomer-pair-rsfe.yaml"
+    else:
+        print(conf_path)
+
+    configuration = load_config_yaml(
+        config=conf_path, input_dir="data/", output_dir="."
+    )
+    check_platform(configuration)
+
+    s1 = SystemStructure(configuration, "structure1")
+    s2 = SystemStructure(configuration, "structure2")
+    s1_to_s2 = ProposeMutationRoute(s1, s2)
+    s1_to_s2.calculate_common_core()
+    return (
+        mutate_pure_tautomers(
+            s1_to_s2,
+            s1,
+            s2,
+            configuration,
+            single_state=single_state,
+            nr_of_bonded_windows=4,
+        ),
+        configuration,
+        s1_to_s2,
+    )
+
+
+def setup_2OJ9_tautomer_pair_rbfe(
+    single_state=False, conf_path="", nr_of_bonded_windows=4
+):
+    from ..mutate import mutate_pure_tautomers
+    from ..constants import check_platform
+
+    if not conf_path:
+        conf_path = "transformato/tests/config/test-2oj9-tautomer-pair-rsfe.yaml"
     else:
         print(conf_path)
 
@@ -1838,7 +1870,7 @@ def setup_acetylacetone_tautomer_pair(
     from ..constants import check_platform
 
     if not conf_path:
-        conf_path = "transformato/tests/config/test-acetylacetone-tautomer-solvation-free-energy.yaml"
+        conf_path = "transformato/tests/config/test-acetylacetone-tautomer-rsfe.yaml"
     else:
         print(conf_path)
 
@@ -1868,13 +1900,13 @@ def setup_acetylacetone_tautomer_pair(
 def test_acetylacetone_tautomer_pair(caplog):
     caplog.set_level(logging.DEBUG)
     setup_acetylacetone_tautomer_pair()
-    shutil.rmtree("acetylacetone-keto-acetylacetone-enol-solvation-free-energy")
+    shutil.rmtree("acetylacetone-keto-acetylacetone-enol-rsfe")
 
 
 def test_2OJ9_tautomer_pair(caplog):
     caplog.set_level(logging.DEBUG)
-    setup_2OJ9_tautomer_pair()
-    shutil.rmtree("2OJ9-original-2OJ9-tautomer-solvation-free-energy")
+    setup_2OJ9_tautomer_pair_rsfe()
+    shutil.rmtree("2OJ9-original-2OJ9-tautomer-rsfe")
 
 
 def test_full_mutation_system1(caplog):
@@ -1882,9 +1914,9 @@ def test_full_mutation_system1(caplog):
 
     for conf, system_name in zip(
         [
-            "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml",
-            "transformato/tests/config/test-neopentane-methane-solvation-free-energy.yaml",
-            "transformato/tests/config/test-ethane-methanol-solvation-free-energy.yaml",
+            "transformato/tests/config/test-toluene-methane-rsfe.yaml",
+            "transformato/tests/config/test-neopentane-methane-rsfe.yaml",
+            "transformato/tests/config/test-ethane-methanol-rsfe.yaml",
         ],
         ["toluene-methane", "neopentane-methane", "ethane-methanol"],
     ):
@@ -1938,15 +1970,15 @@ def test_full_mutation_system1(caplog):
         for mutation in terminal_lj_mutations:
             all_atoms_for_which_lj_turned_off.extend(mutation.vdw_atom_idx)
 
-        shutil.rmtree(f"{system_name}-solvation-free-energy")
+        shutil.rmtree(f"{system_name}-rsfe")
 
 
 def test_full_mutation_system2():
 
     for conf, system_name in zip(
         [
-            "transformato/tests/config/test-toluene-methane-solvation-free-energy.yaml",
-            "transformato/tests/config/test-neopentane-methane-solvation-free-energy.yaml",
+            "transformato/tests/config/test-toluene-methane-rsfe.yaml",
+            "transformato/tests/config/test-neopentane-methane-rsfe.yaml",
         ],
         ["toluene-methane", "neopentane-methane"],
     ):
@@ -2044,4 +2076,4 @@ def test_full_mutation_system2():
                     rtol=1e-3,
                 )
 
-        shutil.rmtree(f"{system_name}-solvation-free-energy")
+        shutil.rmtree(f"{system_name}-rsfe")
